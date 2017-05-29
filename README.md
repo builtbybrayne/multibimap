@@ -42,7 +42,7 @@ Args passed in are by default treated as literals. So if you pass an array in as
 
 The same holds true in reverse for the `iterableKey` option.
 
-### add()
+### add(k, v)
 
 ```js
 map.add('a', 'b');
@@ -194,6 +194,38 @@ map.hasKey('b');
 map.hasValue('a');
 // true
 ```
+
+## Testing
+
+```
+$ npm test
+```
+
+## Building
+
+This project is written in es6 and uses babel to compile
+
+```
+$ npm build
+```
+
+## Environments
+
+This has only been tested in node 6.10.0
+
+
+## WARNINGS
+
+### Efficiency
+
+This has not been benchmarked, so I make no claims for efficiency. Feel free to have a go though and let me know.
+
+
+### Unexpected Values
+
+This has not been tested for unexpected key or value arguments. e.g. passing in `undefined`, `null`, `NaN` etc will likely give strange behaviour. The underlying code uses a mirrored pair of es6 `Map` objects, so the behaviour will be as expected with them.
+
+
 
 ## License
 
