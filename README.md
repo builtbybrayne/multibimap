@@ -38,7 +38,11 @@ const map = new MultiBiMap({
 
 ### Literals vs Iterables
 
-Args passed in are by default treated as literals. So if you pass an array in as a value, it will be stored against the key as an array. If you want the array to be treated as a set of items to be stored individually against the key, you can pass in `{iterableValue: true}`. If you pass it as a constructor option it will become the default behaviour for the map. You can also override it on individual calls to `add()`.
+Args passed in to `add(k, v)` are by default treated as literal arguments. So if you pass an array (let's call it 'A') in as a value, it will be stored against the key as that array. Calling `getKey(k)` will returns an array of values, with the original array 'A' as one element within the returned result.
+
+If you want the array to be treated as a set of items to be stored separetly against the key, you can pass `{iterableValue: true}` for the `opt` argument. If you do this with an Array value (let's call it 'B'), then when you call `getKey(k)` it will return an array of results, with all elements of 'B' as elements in the returned array. 
+
+If you pass `{iterableValue: true}` as a constructor option it will become the default behaviour for the map. So you can set a default or override for individual calls to `add(k, v)`.
 
 The same holds true in reverse for the `iterableKey` option.
 
@@ -86,10 +90,10 @@ map.has('x', 'b');
 ```js
 map.add('a', 'b');
 
-map.has('a');
+map.hasKey('a');
 // true
 
-map.has('b');
+map.hasKey('b');
 // false
 ```
 
@@ -149,11 +153,11 @@ map.delete('a', 'b');
 map.has('a', 'b')
 // false
 
-map.hasKey('a');
-// true
+map.getKey('a');
+// ['c']
 
-map.hasValue('b');
-// true
+map.getVal('b');
+// ['c']
 ```
 
 ### deleteKey(k)
@@ -171,8 +175,8 @@ map.hasKey('a');
 map.hasVal('b');
 // false
 
-map.hasVal('c');
-// true
+map.getVal('c');
+// ['b']
 ```
 
 
@@ -191,8 +195,8 @@ map.hasVal('c');
 map.hasKey('b');
 // false
 
-map.hasValue('a');
-// true
+map.getKey('a');
+// ['b']
 ```
 
 ## Testing
@@ -216,14 +220,15 @@ This has only been tested in node 6.10.0
 
 ## WARNINGS
 
-### Efficiency
-
-This has not been benchmarked, so I make no claims for efficiency. Feel free to have a go though and let me know.
-
-
 ### Unexpected Values
 
-This has not been tested for unexpected key or value arguments. e.g. passing in `undefined`, `null`, `NaN` etc will likely give strange behaviour. The underlying code uses a mirrored pair of es6 `Map` objects, so the behaviour will be as expected with them.
+This has not been tested for key or value arguments that could lead to unspecified behaviour. e.g. passing in `undefined`, `null`, `NaN` etc will likely give strange behaviour. The underlying code uses a mirrored pair of es6 `Map` objects, so the behaviour will be as expected with them (and remember that keys and values in multibimap terminology are each treated as both keys and values in es6 Map terminology.
+
+### Efficiency and Performance
+
+This has not been benchmarked, so I make no efficiency or performance claims. I am open to suggestions for optimisations.
+
+
 
 
 
