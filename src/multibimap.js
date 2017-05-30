@@ -1,5 +1,14 @@
 'use strict';
 
+function isIterable(obj) {
+  // checks for null and undefined
+  if (obj == null) {
+    return false;
+  }
+  return typeof obj[Symbol.iterator] === 'function';
+}
+
+
 class _Map {
   constructor() {
     this.map = new Map();
@@ -64,9 +73,9 @@ export default class MultiBiMap {
       iterableValue: this.opts.iterableValue
     }, opts);
 
-    k = opts.iterableKey && !Array.isArray(k) ? [k] : k;
-    v = opts.iterableValue && !Array.isArray(v) ? [v] : v;
-    
+    k = opts.iterableKey && !isIterable(k) ? [k] : k;
+    v = opts.iterableValue && !isIterable(v) ? [v] : v;
+
     if (opts.iterableKey && opts.iterableValue) {
       k.forEach(k => this._byKey.addIterable(k, v));
       v.forEach(v => this._byVal.addIterable(v, k));
