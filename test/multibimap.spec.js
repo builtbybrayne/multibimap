@@ -102,6 +102,15 @@ describe('basic behaviour', () => {
     expect(map.getVal(lv1)).to.eql([lk2]);
   });
 
+  it('should delete both key and value entries if a mapping is removed and it is the only mapping that contains those entitites', () => {
+    map.add(lk1, lv1);
+    map.delete(lk1, lv1);
+    expect(map.hasKey(lk1)).to.be.false;
+    expect(map.hasVal(lv1)).to.be.false;
+    expect(map.getKey(lk1)).to.be.false;
+    expect(map.getVal(lv1)).to.be.false;
+  });
+
   it('should delete entire keys', () => {
     map.add(lk1, lv1);
     map.add(lk1, lv2);
@@ -118,7 +127,28 @@ describe('basic behaviour', () => {
     map.deleteVal(lv1);
     expect(map.hasVal(lv1)).to.be.false;
     expect(map.getKey(lk1)).to.eql([lv2]);
-  })
+  });
+
+  it('should delete the value entry if a key is removed and it is the only pointer to that val', () => {
+    map.add(lk1, lv1);
+    map.add(lk1, lv2);
+    map.add(lk2, lv2);
+
+    map.deleteKey(lk1);
+    expect(map.hasVal(lv1)).to.be.false;
+    expect(map.hasVal(lv2)).to.be.true;
+  });
+
+  it('should delete the key entry if a value is removed and it is the only pointer to that key', () => {
+    map.add(lk1, lv1);
+    map.add(lk1, lv2);
+    map.add(lk2, lv2);
+
+    map.deleteVal(lv2);
+    expect(map.hasKey(lk2)).to.be.false;
+    expect(map.hasKey(lk1)).to.be.true;
+  });
+
 });
 
 
@@ -145,10 +175,12 @@ class With {
       }
     }
   }
+
   lk() {
     this.k = lk1;
     return this;
   }
+
   ik() {
     this.k = ik1;
     return this;
@@ -198,7 +230,7 @@ class Gives {
 }
 
 class Test {
-  constructor(map, opts={}) {
+  constructor(map, opts = {}) {
     this.with = new With(map, opts);
   }
 }

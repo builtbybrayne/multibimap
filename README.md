@@ -146,7 +146,7 @@ map.getVal('x');
 ```js
 map.add('a', 'b');
 map.add('a', 'c');
-map.add('c', 'b');
+map.add('d', 'b');
 
 map.delete('a', 'b');
 
@@ -157,7 +157,22 @@ map.getKey('a');
 // ['c']
 
 map.getVal('b');
-// ['c']
+// ['d']
+
+map.delete('a', 'c');
+map.hasKey('a');
+// false
+map.getKey('a');
+// false
+map.hasVal('c');
+// false
+map.getVal('c');
+// false
+
+map.hasKey('d');
+// true
+map.getKey('d');
+// ['b']
 ```
 
 ### deleteKey(k)
@@ -165,7 +180,7 @@ map.getVal('b');
 ```js
 map.add('a', 'b');
 map.add('a', 'c');
-map.add('b', 'c');
+map.add('d', 'c');
 
 map.deleteKey('a');
 
@@ -176,7 +191,12 @@ map.hasVal('b');
 // false
 
 map.getVal('c');
-// ['b']
+// ['d']
+
+map.deleteKey('d');
+
+map.getVal('c');
+// false
 ```
 
 
@@ -185,14 +205,16 @@ map.getVal('c');
 ```js
 map.add('a', 'b');
 map.add('a', 'c');
-map.add('b', 'c');
+map.add('d', 'c');
 
 map.deleteVal('c');
 
 map.hasVal('c');
 // false
 
-map.hasKey('b');
+map.hasKey('d');
+// false
+map.getKey('d');
 // false
 
 map.getKey('a');

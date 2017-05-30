@@ -34,14 +34,14 @@ class _Map {
   delete(k, v) {
     if (arguments.length < 2)
       this.map.delete(k);
-    else
-      if (this.map.has(k))
-        this.map.get(k).delete(v);
+    else if (this.map.has(k)) {
+      this.map.get(k).delete(v);
+    }
   }
 }
 
 export default class MultiBiMap {
-  constructor(opts={}) {
+  constructor(opts = {}) {
     this.opts = Object.assign({
       iterableKey: false,
       iterableValue: false
@@ -58,7 +58,7 @@ export default class MultiBiMap {
     return this._byVal.has(v) ? [...this._byVal.get(v).values()] : false;
   }
 
-  add(k, v, opts={}) {
+  add(k, v, opts = {}) {
     opts = Object.assign({
       iterableKey: this.opts.iterableKey,
       iterableValue: this.opts.iterableValue
@@ -66,7 +66,7 @@ export default class MultiBiMap {
 
     k = opts.iterableKey && !Array.isArray(k) ? [k] : k;
     v = opts.iterableValue && !Array.isArray(v) ? [v] : v;
-    
+
     if (opts.iterableKey && opts.iterableValue) {
       k.forEach(k => this._byKey.addIterable(k, v));
       v.forEach(v => this._byVal.addIterable(v, k));
@@ -99,34 +99,33 @@ export default class MultiBiMap {
   }
 
   delete(k, v) {
-    if (this._byKey.has(k)) {
-      this._byKey.get(k).delete(v);
-    }
-    if (this._byVal.has(v)) {
-      this._byVal.get(v).delete(k);
-    }
+    deleteOnly(k, v, this._byKey, this._byVal);
+    deleteOnly(v, k, this._byVal, this._byKey);
   }
 
   deleteKey(k) {
-    if (this._byKey.has(k)) {
-      this._byKey.get(k).forEach(v => {
-        if (this._byVal.has(v))
-          this._byVal.get(v).delete(k);
-      });
-      this._byKey.delete(k);
-    }
+    deleteAll(k, this._byKey, this._byVal);
   }
 
   deleteVal(v) {
-    if (this._byVal.has(v)) {
-      this._byVal.get(v).forEach(k => {
-        if (this._byKey.has(k))
-          this._byKey.get(k).delete(v);
-      });
-      this._byVal.delete(v);
+    deleteAll(v, this._byVal, this._byKey);
+  }
+}
+
+
+function deleteAll(a, aMap, bMap) {
+  if (aMap.has(a)) {
+    aMap.get(a).forEach(b => deleteOnly(b, a, bMap));
+    aMap.delete(a);
+  }
+}
+
+function deleteOnly(a, b, aMap) {
+  if (aMap.has(a)) {
+    const bSet = aMap.get(a);
+    bSet.delete(b);
+    if (!bSet.size) {
+      aMap.delete(a);
     }
   }
-
-
-
 }
