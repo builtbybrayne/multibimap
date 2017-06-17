@@ -1,4 +1,4 @@
 import 'babel-polyfill';
-import MultiBiMap from './multiBiMap';
-export * from './multiBiMap';
+import MultiBiMap from './multibimap';
+export * from './multibimap';
 export default MultiBiMap;
